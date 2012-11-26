@@ -3,9 +3,7 @@ ess.js
 
 A fast, simple, opinionated selector "engine".
 
-This module provides a simple way to query the DOM for elements by ID, class or tag name only. It is designed to be small and to only allow efficient DOM queries, which is especially useful with mobile devices. It intentionally does not and will never support more complicated ways of querying on the basis that these are slow and can be avoided. This module is AMD compatible.
-
-This module should not be compared to sophisticated selector engines like Sizzle, Qwery, etc., which are capable of much more. It is probably not suitable as a drop-in replacement for many projects.
+This module provides a simple way to query the DOM for elements by ID, class or tag name only. It was designed to be both small and to force users to make efficient DOM queries, which is useful when developing for mobile devices. It intentionally does not and will never support more complicated ways of querying on the basis that these are slow and can be avoided (also, there are many other projects around which fulfil this job very well already). This module is AMD compatible.
 
 ## Examples
 ```js
@@ -23,19 +21,22 @@ var navElement = ess('#nav');
 ess('li', navElement); // returns DOMNode array
 ```
 
-## Stuff that it cannot do
-* Qualified selectors like: ```li.current```
-* Non-simplistic patterns like: ```div > ul``` or  ```p + p```
-* Comma-separated selectors like: ```input, select, textarea```
+## Queries that it cannot do
+* Qualified selectors: ```li.current``` (maybe soon)
+* Non-simplistic selectors: ```div > ul``` or  ```p + p```
+* Comma-separated selectors: ```input, select, textarea```
 * Anything else other than atomistic, space-separated selection by ID, class and tag!
 
 ## Compatibility
-Chrome, Firefox - proper testing to follow. Currently it assumes basic ES5 support but that will probably be removed in the future.
+Chrome, Firefox - proper list of devices to follow.
 
 ## Todo
-* Browser compatibility (remove ES5 dependency)
 * Look at adding simple qualified selector support
 * Bonzo version
 * Ender integration
 * Improve readme
-* Licence it
+
+## Credits
+Thanks to...
+* [umdjs](https://github.com/umdjs/umd) for the AMD bootstrap
+* [benchmark.js](https://github.com/bestiejs/benchmark.js) for benchmarking
