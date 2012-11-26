@@ -1,9 +1,7 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
         define([], factory);
     } else {
-        // Browser globals
         root.ess = factory();
     }
 }(this, function () {
@@ -14,12 +12,15 @@
                 thisSelector = parts.shift(),
                 nextSelector = parts.join(' '),
                 results = s(thisSelector, context);
-            if (!Array.isArray(results)) {
-                results = [results];
+            if (results) {
+                if (typeof results.length !== 'undefined') {
+                    for (var i=0, l=results.length; i < l; i++) {
+                        elements = elements.concat(s(nextSelector, results[i]));
+                    }
+                } else {
+                    elements = elements.concat(s(nextSelector, results));
+                }
             }
-            results.forEach(function (element) {
-                elements = elements.concat(s(nextSelector, element));
-            });
         } else {
             context = context || document;
             var type = selector.substring(0, 1);

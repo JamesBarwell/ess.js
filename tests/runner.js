@@ -1,6 +1,8 @@
 define(
     ['../src/ess'],
     function(s) {
+        window.ess = s;
+
         // Test helpers
         var A = Array.prototype.slice,
             D = document.getElementsByClassName.bind(document);
@@ -25,9 +27,13 @@ define(
             '#nav li':       function() { return A.call(D('t-08')); },
             '#nav .current': function() { return A.call(D('t-09')); },
 
-            // Triple
-            '#nav ul li':       function() { return A.call(D('t-10')); },
-            '#nav ul .current': function() { return A.call(D('t-11')); }
+            // Triple+
+            '#nav ul li':            function() { return A.call(D('t-10')); },
+            '#nav ul .current':      function() { return A.call(D('t-11')); },
+            '#nav ul li a .hl span': function() { return A.call(D('t-12')); },
+
+            // Empty
+            '#nav .fail li': function() { return []; }
         }
 
         var allPassed = true;
@@ -64,11 +70,10 @@ define(
         console.log('Begin benchmark');
         var suite = new Benchmark.Suite;
         var benchTests = [
-            '#nav',
-            '.root',
-            'div',
             'div div',
-            '#nav li'
+            '#nav li',
+            '#nav ul li a .hl span',
+            '#nav .fail div li a span',
         ].forEach(function(selector) {
             suite.add(selector, function() {
                 s(selector);
