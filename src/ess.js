@@ -29,7 +29,11 @@
             } else {
                 var list;
                 if ('.' === type) {
-                    list = context.getElementsByClassName(selector.substring(1));
+                    if (document.getElementsByClassName) {
+                        list = context.getElementsByClassName(selector.substring(1));
+                    } else {
+                        list = context.querySelectorAll(selector);
+                    }
                 } else {
                     list = context.getElementsByTagName(selector);
                 }
