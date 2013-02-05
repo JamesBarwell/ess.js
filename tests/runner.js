@@ -32,6 +32,10 @@ define(
             '#nav ul .current':      function() { return A.call(D('t-11')); },
             '#nav ul li a .hl span': function() { return A.call(D('t-12')); },
 
+            // ID within context
+            'body #nav': function() { return D('t-13'); },
+            'body #nav .current': function() { return A.call(D('t-14')); },
+
             // Empty
             '#nav .fail li': function() { return []; }
         }

@@ -22,11 +22,11 @@
                 }
             }
         } else {
-            context = context || document;
             var type = selector.substring(0, 1);
             if ('#' === type) {
-                return context.getElementById(selector.substring(1));
+                return document.getElementById(selector.substring(1));
             } else {
+                context = context || document;
                 var list;
                 if ('.' === type) {
                     if (document.getElementsByClassName) {

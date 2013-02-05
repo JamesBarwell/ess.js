@@ -27,6 +27,9 @@ ess('li', navElement); // returns DOMNode array
 * Comma-separated selectors: ```input, select, textarea```
 * Anything else other than atomistic, space-separated selection by ID, class and tag!
 
+# Other caveats
+* Searching for an element by ID will ignore any given context, e.g. ```body #nav``` is equivalent to ```#nav```
+
 ## Compatibility
 Chrome, Firefox - proper list of devices to follow.
 
@@ -34,7 +37,6 @@ Chrome, Firefox - proper list of devices to follow.
 * Look at adding simple qualified selector support
 * Bonzo version
 * Ender integration
-* Improve readme
 
 ## Credits
 Thanks to...
