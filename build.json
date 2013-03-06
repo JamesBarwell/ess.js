@@ -1,9 +1,13 @@
 {
   "JAVASCRIPT": {
-      "DIST_DIR": "./"
-    , "ess": [
-        "src/copyright.js"
-      , "src/ess.js"
+    "DIST_DIR": "./",
+    "ess": [
+      "src/copyright.js",
+      "src/ess.js"
+    ],
+    "integration/ess-bonzo": [
+      "src/copyright.js",
+      "src/ess-bonzo.js"
     ]
   }
 , "JSHINT_OPTS": {
