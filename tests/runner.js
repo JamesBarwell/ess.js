@@ -33,7 +33,7 @@ define(
             '#nav ul li a .hl span': function() { return A.call(D('t-12')); },
 
             // ID within context
-            'body #nav': function() { return D('t-13'); },
+            'body #nav': function() { return D('t-13')[0]; },
             'body #nav .current': function() { return A.call(D('t-14')); },
 
             // Empty
@@ -71,24 +71,26 @@ define(
         }
 
         // Benchmark
-        console.log('Begin benchmark');
-        var suite = new Benchmark.Suite;
-        var benchTests = [
-            'div div',
-            '#nav li',
-            '#nav ul li a .hl span',
-            '#nav .fail div li a span',
-        ].forEach(function(selector) {
-            suite.add(selector, function() {
-                s(selector);
+        if (allPassed) {
+            console.log('Begin benchmark');
+            var suite = new Benchmark.Suite;
+            var benchTests = [
+                'div div',
+                '#nav li',
+                '#nav ul li a .hl span',
+                '#nav .fail div li a span',
+            ].forEach(function(selector) {
+                suite.add(selector, function() {
+                    s(selector);
+                })
+            });
+            suite.on('cycle', function(event) {
+                console.log(String(event.target));
             })
-        });
-        suite.on('cycle', function(event) {
-            console.log(String(event.target));
-        })
-        .on('complete', function() {
-            console.log('Benchmark complete');
-        })
-        .run({ async: true });
+            .on('complete', function() {
+                console.log('Benchmark complete');
+            })
+            .run({ async: true });
+        }
     }
 );

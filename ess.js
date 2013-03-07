@@ -14,6 +14,10 @@
 }(this, function () {
     function s(selector, context) {
         var elements = [];
+        var idIndex = selector.indexOf('#');
+        if (idIndex !== -1) {
+            selector = selector.substring(idIndex);
+        }
         if (selector.indexOf(' ') !== -1) {
             var parts = selector.split(' '),
                 thisSelector = parts.shift(),
