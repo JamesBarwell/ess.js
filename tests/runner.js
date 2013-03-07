@@ -1,16 +1,42 @@
-define(
-    ['../src/ess'],
-    function(s) {
-        window.ess = s;
+var fs     = require('fs'),
+    assert = require('assert'),
+    mocha  = require('mocha'),
+    jsdom  = require('jsdom');
 
-        // Test helpers
-        var A = Array.prototype.slice,
-            D = document.getElementsByClassName.bind(document);
+describe('ess.js', function() {
+
+    var doc, ess, A, D;
+
+    before(function(done) {
+        var html = fs.readFileSync(__dirname + '/tests.html', 'utf8');
+        jsdom.env(
+            html, [
+                __dirname + '/../src/ess.js'
+            ],
+            function(errors, win) {
+                if (errors) {
+                    throw errors;
+                }
+                doc = win.document;
+                ess = win.ess;
+
+                // Test helpers
+                A = Array.prototype.slice,
+                D = doc.getElementsByClassName.bind(doc);
+
+                done();
+            }
+        );
+
+    });
+
+
+    describe('selector', function() {
 
         var tests = {
             // Head/body
-            'body':     function() { return [document.body] },
-            'head':     function() { return [document.head] },
+            'body':     function() { return [doc.body] },
+            'head':     function() { return [doc.head] },
 
             // Simple
             'p':        function() { return A.call(D('t-01')); },
@@ -33,64 +59,36 @@ define(
             '#nav ul li a .hl span': function() { return A.call(D('t-12')); },
 
             // ID within context
-            'body #nav': function() { return D('t-13')[0]; },
+            'body #nav':          function() { return D('t-13')[0]; },
             'body #nav .current': function() { return A.call(D('t-14')); },
 
             // Empty
             '#nav .fail li': function() { return []; }
         }
 
-        var allPassed = true;
-
-        // Unit test
-        console.log('Begin tests');
         Object.keys(tests).forEach(function(selector) {
-            var expected = tests[selector](),
-                actual = s(selector),
-                passed = true;
+            it('should match ' + selector, function() {
+                var expected = tests[selector]();
+                var actual = ess(selector);
+                var message = 'Failed match: ' + selector;
 
-            if (expected.length !== actual.length) {
-                passed = allPassed = false;
-            }
-
-            for (var i = 0; i < expected.length; i++) {
-                if (expected[i] !== actual[i]) {
-                    passed = allPassed = false;
+                if (Array.isArray(expected)) {
+                    assert(
+                        Array.isArray(actual),
+                        'Failed to return array: ' + selector
+                    );
+                    for (var i = 0; i < expected.length; i++) {
+                        assert.strictEqual(actual[i], expected[i], message);
+                    }
+                } else {
+                    assert(
+                        !Array.isArray(actual),
+                        'Got array but expected element: ' + selector
+                    );
+                    assert.strictEqual(actual, expected, message);
                 }
-            }
-
-            var result = passed ? 'passed' : 'failed';
-            console.log('Testing selector: [' + selector + '] - ' + result);
-        });
-
-        if (allPassed) {
-            var count = Object.keys(tests).length;
-            console.log('All ' + count + ' tests passed');
-        } else {
-            console.log('Some tests failed');
-        }
-
-        // Benchmark
-        if (allPassed) {
-            console.log('Begin benchmark');
-            var suite = new Benchmark.Suite;
-            var benchTests = [
-                'div div',
-                '#nav li',
-                '#nav ul li a .hl span',
-                '#nav .fail div li a span',
-            ].forEach(function(selector) {
-                suite.add(selector, function() {
-                    s(selector);
-                })
             });
-            suite.on('cycle', function(event) {
-                console.log(String(event.target));
-            })
-            .on('complete', function() {
-                console.log('Benchmark complete');
-            })
-            .run({ async: true });
-        }
-    }
-);
+        });
+    });
+
+});

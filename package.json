@@ -10,6 +10,11 @@
         "url" : "https://github.com/JamesBarwell/ess.js.git"
     },
     "devDependencies": {
-        "smoosh": "0.4.0"
+        "smoosh": "0.4.0",
+        "mocha": "1.8.1",
+        "jsdom": "0.5.1"
+    },
+    "scripts": {
+      "test": "node_modules/mocha/bin/mocha tests/runner.js"
     }
 }
