@@ -3,3 +3,6 @@ build:
 
 test:
 	npm test
+
+bench:
+	node tests/bench.js
