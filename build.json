@@ -5,9 +5,9 @@
       "src/copyright.js",
       "src/ess.js"
     ],
-    "integration/ess-bonzo": [
+    "integration/ess-bonzo-bean": [
       "src/copyright.js",
-      "src/ess-bonzo.js"
+      "src/ess-bonzo-bean.js"
     ]
   }
 , "JSHINT_OPTS": {

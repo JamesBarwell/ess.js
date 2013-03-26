@@ -30,7 +30,6 @@ describe('ess.js', function() {
 
     });
 
-
     describe('selector', function() {
 
         var tests = {
@@ -89,6 +88,82 @@ describe('ess.js', function() {
                 }
             });
         });
+    });
+
+});
+
+describe('ess-bonzo-bean.js', function() {
+
+    var doc, $ess, ess, bonzo, bean, A, D;
+
+    before(function(done) {
+        var html = fs.readFileSync(__dirname + '/bonzo-bean.html', 'utf8');
+        jsdom.env(
+            html, [
+                __dirname + '/../ess.js',
+                __dirname + '/bonzo.js',
+                __dirname + '/bean.js',
+                __dirname + '/../integration/ess-bonzo-bean.js'
+            ],
+            function(errors, win) {
+                if (errors) {
+                    throw errors;
+                }
+                doc = win.document;
+                $ess = win.$ess;
+                ess = win.ess;
+                bonzo = win.bonzo;
+                bean = win.bean;
+
+                // Test helpers
+                A = Array.prototype.slice,
+                D = doc.getElementsByClassName.bind(doc);
+
+                done();
+            }
+        );
+
+    });
+
+    describe('selector', function() {
+
+        it('should wrap the response as a Bonzo collection', function() {
+
+                [
+                    'body',
+                    '#nav ul li'
+                ].forEach(function(selector) {
+                    var expected = bonzo(ess(selector));
+                    var actual = $ess(selector);
+
+                    assert.ok(expected.length > 0);
+
+                    for (var i = 0; i < expected.length; i++) {
+                        assert.strictEqual(actual[i], expected[i]);
+                    }
+                });
+        });
+
+        it('should implement the Bean "on" method on to the Bonzo collection', function() {
+            var clicked = false;
+            $ess('li').on('click', function() {
+                clicked = true;
+            });
+
+            bean.fire(ess('li')[0], 'click');
+
+            assert.ok(clicked);
+        });
+
+        it('should implement a find method on to the Bonzo collection', function() {
+            var expected = bonzo(ess('#nav ul li'));
+            var actual = $ess('#nav ul').find('li');
+
+            for (var i = 0; i < expected.length; i++) {
+                assert.strictEqual(actual[i], expected[i]);
+            }
+        });
+
     });
 
 });
