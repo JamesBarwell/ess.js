@@ -20,6 +20,6 @@
     "benchmark": "1.0.0"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha tests/runner.js"
+    "test": "mocha test/main.js"
   }
 }

@@ -1,8 +1,13 @@
 build:
-	node_modules/smoosh/bin/smoosh make build.json
+	node_modules/.bin/smoosh make build.json
 
 test:
-	npm test
+	node_modules/.bin/mocha test/main.js
+
+spec:
+	node_modules/.bin/mocha --reporter spec test/main.js
 
 bench:
-	node tests/bench.js
+	node test/bench.js
+
+.PHONY: test
