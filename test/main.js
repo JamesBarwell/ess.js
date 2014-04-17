@@ -1,7 +1,8 @@
 var fs     = require('fs'),
     assert = require('assert'),
     mocha  = require('mocha'),
-    jsdom  = require('jsdom');
+    jsdom  = require('jsdom'),
+    sinon  = require('sinon');
 
 describe('ess.js', function() {
 
@@ -30,8 +31,7 @@ describe('ess.js', function() {
 
     });
 
-    describe('selector', function() {
-
+    describe('DOM selector', function() {
         var tests = {
             // Head/body
             'body':     function() { return [doc.body] },
@@ -66,26 +66,38 @@ describe('ess.js', function() {
         }
 
         Object.keys(tests).forEach(function(selector) {
-            it('should match ' + selector, function() {
-                var expected = tests[selector]();
-                var actual = ess(selector);
-                var message = 'Failed match: ' + selector;
+            context('having selected on: ' + selector, function() {
+                var actual, expected;
 
-                if (Array.isArray(expected)) {
-                    assert(
-                        Array.isArray(actual),
-                        'Failed to return array: ' + selector
-                    );
-                    for (var i = 0; i < expected.length; i++) {
-                        assert.strictEqual(actual[i], expected[i], message);
+                beforeEach(function() {
+                    actual      = ess(selector);
+                    expected    = tests[selector]();
+                });
+
+                it('should return the correct data type', function() {
+                    if (Array.isArray(expected)) {
+                        assert(Array.isArray(actual),
+                            'Failed to return array: ' + selector
+                        );
+                    } else {
+                        assert(
+                            !Array.isArray(actual),
+                            'Got array but expected element: ' + selector
+                        );
                     }
-                } else {
-                    assert(
-                        !Array.isArray(actual),
-                        'Got array but expected element: ' + selector
-                    );
-                    assert.strictEqual(actual, expected, message);
-                }
+                });
+
+                it('should return the matching element(s)', function() {
+                    var failMessage = 'Failed match: ' + selector;
+
+                    if (Array.isArray(expected)) {
+                        for (var i = 0; i < expected.length; i++) {
+                            assert.strictEqual(actual[i], expected[i], failMessage);
+                        }
+                    } else {
+                        assert.strictEqual(actual, expected, failMessage);
+                    }
+                });
             });
         });
     });
@@ -122,46 +134,60 @@ describe('ess-bonzo-bean.js', function() {
                 done();
             }
         );
-
     });
 
-    describe('selector', function() {
+    describe('DOM selector', function() {
 
-        it('should wrap the response as a Bonzo collection', function() {
+        context('having made a selection', function() {
+            var actual, expected;
 
-                [
-                    'body',
-                    '#nav ul li'
-                ].forEach(function(selector) {
-                    var expected = bonzo(ess(selector));
-                    var actual = $ess(selector);
-
-                    assert.ok(expected.length > 0);
-
-                    for (var i = 0; i < expected.length; i++) {
-                        assert.strictEqual(actual[i], expected[i]);
-                    }
-                });
-        });
-
-        it('should implement the Bean "on" method on to the Bonzo collection', function() {
-            var clicked = false;
-            $ess('li').on('click', function() {
-                clicked = true;
+            beforeEach(function() {
+                var selector = '#nav ul li'
+                actual = $ess(selector);
+                expected = bonzo(ess(selector));
             });
 
-            bean.fire(ess('li')[0], 'click');
+            it('should wrap the response as a Bonzo collection', function() {
+                assert.ok(expected.length > 0);
 
-            assert.ok(clicked);
+                for (var i = 0; i < expected.length; i++) {
+                    assert.strictEqual(actual[i], expected[i]);
+                }
+            });
+
         });
 
-        it('should implement a find method on to the Bonzo collection', function() {
-            var expected = bonzo(ess('#nav ul li'));
-            var actual = $ess('#nav ul').find('li');
+        context('having made a selection and used Bean to bind and fire a click event', function() {
+            var actual, expected, spy;
 
-            for (var i = 0; i < expected.length; i++) {
-                assert.strictEqual(actual[i], expected[i]);
-            }
+            beforeEach(function() {
+                var selector = '#nav ul li'
+                actual = $ess(selector);
+                expected = bonzo(ess(selector));
+
+                spy = sinon.spy();
+                $ess('li').on('click', spy);
+                bean.fire(ess('li')[0], 'click');
+            });
+
+            it('should have run the bound callback', function() {
+                sinon.assert.calledOnce(spy);
+            });
+        });
+
+        context('having made a selection and used .find() to search within its context', function() {
+            var actual, expected;
+
+            beforeEach(function() {
+                actual = $ess('#nav ul').find('li');
+                expected = bonzo(ess('#nav ul li'));
+            });
+
+            it('should return the matching elements', function() {
+                for (var i = 0; i < expected.length; i++) {
+                    assert.strictEqual(actual[i], expected[i]);
+                }
+            });
         });
 
     });

@@ -17,7 +17,8 @@
     "smoosh": "~0.4.1",
     "mocha": "~1.18.2",
     "jsdom": "0.5.2",
-    "benchmark": "1.0.0"
+    "benchmark": "1.0.0",
+    "sinon": "~1.9.0"
   },
   "scripts": {
     "test": "mocha test/main.js"
