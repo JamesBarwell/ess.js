@@ -3,6 +3,8 @@ ess.js
 
 A fast, simple, opinionated selector "engine".
 
+[![Build Status](https://travis-ci.org/JamesBarwell/ess.js.svg?branch=master)](https://travis-ci.org/JamesBarwell/ess.js)
+
 This module provides a simple way to query the DOM for elements by ID, class or tag name only. It was designed to be both small and to force users to make efficient DOM queries, which is useful when developing for mobile devices. It intentionally does not and will never support more complicated ways of querying on the basis that these are slow and can be avoided (also, there are many other projects around which fulfil this job very well already). This module is AMD compatible.
 
 ## Examples
