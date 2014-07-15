@@ -2,7 +2,7 @@
   "name": "ess",
   "author": "James Barwell <jb@jamesbarwell.co.uk>",
   "description": "Extremely simple selectors",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "ess.js",
   "keywords:": [
     "selector",
