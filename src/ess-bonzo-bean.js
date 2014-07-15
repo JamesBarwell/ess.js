@@ -6,7 +6,10 @@
     }
 }(this, function (Ess, Bonzo, Bean) {
     function s(selector, context) {
-        return wrapBonzo(Ess(selector, context));
+        if (typeof selector === 'string') {
+            selector = Ess(selector, context);
+        }
+        return wrapBonzo(selector);
     }
 
     function wrapBonzo(elements) {

@@ -154,7 +154,24 @@ describe('ess-bonzo-bean.js', function() {
                     assert.strictEqual(actual[i], expected[i]);
                 }
             });
+        });
 
+        context('having selected an element', function() {
+            var actual, expected;
+
+            beforeEach(function() {
+                var element = doc.getElementById('nav');
+                actual = $ess(element);
+                expected = bonzo(element);
+            });
+
+            it('should wrap the response as a Bonzo collection', function() {
+                assert.ok(expected.length > 0);
+
+                for (var i = 0; i < expected.length; i++) {
+                    assert.strictEqual(actual[i], expected[i]);
+                }
+            });
         });
 
         context('having made a selection and used Bean to bind and fire a click event', function() {
